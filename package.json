@@ -1,0 +1,42 @@
+{
+  "name": "byzantine-gateway",
+  "version": "0.0.1-SNAPSHOT",
+  "description": "Gateway access to the HLF channel for the Byzantine Flu data",
+  "main": "index.js",
+  "scripts": {
+    "setupKeystore": "rm -rf ~/.hfc-key-store && cp -r app/hfc-key-store ~/.hfc-key-store",
+    "start": "npm run setupKeystore && node index",
+    "start:dev": "nodemon index",
+    "debug": "nodemon --inspect index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hyperledger",
+    "http",
+    "websocket",
+    "gateway",
+    "React",
+    "SPA"
+  ],
+  "author": "Adi Rosenblum",
+  "license": "ISC",
+  "engines": {
+    "node": "8.15.0",
+    "npm": "6.4.1"
+  },
+  "dependencies": {
+    "asn1.js": "^5.0.1",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-session": "^1.17.0",
+    "cookie-parser": "^1.4.4",
+    "fabric-client": "^1.4.5",
+    "js-sha256": "^0.9.0",
+    "log4js": "^0.6.38",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
+}
