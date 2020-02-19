@@ -28,6 +28,7 @@ var appconfig = require('./config.js');
 var chaincodes = require('./endpoint/chaincodes.js');
 var txproposalrate = require('./endpoint/transactionproposalrate.js');
 var chaincode = require('./endpoint/executechaincode.js');
+var poolInfo = require('./endpoint/poolinfo.js');
 var querychaincode = require('./endpoint/querychaincode.js');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
@@ -214,7 +215,7 @@ app.post('/api/execute', function (req, res) {
 
 
 app.post('/api/channel', function (req, res) {
-    logger.info('================ /channel ======================');
+    logger.debug('================ /channel ======================');
 
     if (validateChannelIdParameter(req)) {
         var channelid = req.body.channelid;
@@ -228,7 +229,7 @@ app.post('/api/channel', function (req, res) {
 });
 
 app.post('/api/peers', function (req, res) {
-    logger.info('================ /peers ======================');
+    logger.debug('================ /peers ======================');
 
     if (validateChannelIdParameter(req)) {
         var channelid = req.body.channelid;
@@ -243,7 +244,7 @@ app.post('/api/peers', function (req, res) {
 
 
 app.post('/api/blockinfo', function (req, res) {
-    logger.info('================ /blockinfo ==================');
+    logger.debug('================ /blockinfo ==================');
 
     if (validateChannelIdParameter(req)) {
         var channelid = req.body.channelid;
@@ -257,7 +258,7 @@ app.post('/api/blockinfo', function (req, res) {
 });
 
 app.post('/api/block', function (req, res) {
-    logger.info('================ /block ======================');
+    logger.debug('================ /block ======================');
 
     if (validateChannelIdParameter(req) && validateRequiredParameter(req, 'blocknumber') && parseInt(req.body.blocknumber)) {
         var channelid = req.body.channelid;
@@ -273,7 +274,7 @@ app.post('/api/block', function (req, res) {
 });
 
 app.post('/api/blockhash', function (req, res) {
-    logger.info('================ /blockhash ======================');
+    logger.debug('================ /blockhash ======================');
 
     if (validateRequiredParameter(req, 'number') && validateRequiredParameter(req, 'prevhash') && validateRequiredParameter(req, 'datahash')) {
         var number = req.body.number;
@@ -289,7 +290,7 @@ app.post('/api/blockhash', function (req, res) {
 });
 
 app.post('/api/chaincodes', function (req, res) {
-    logger.info('================ /chaincodes ======================');
+    logger.debug('================ /chaincodes ======================');
 
     if (validateChannelIdParameter(req)) {
         var channelid = req.body.channelid;
@@ -303,7 +304,7 @@ app.post('/api/chaincodes', function (req, res) {
 });
 
 app.post('/api/channelconfig', function (req, res) {
-    logger.info('================ /channelconfig ======================');
+    logger.debug('================ /channelconfig ======================');
 
     if (validateChannelIdParameter(req) && validateRequiredParameter(req, 'blocknumber') && parseInt(req.body.blocknumber)) {
         var channelid = req.body.channelid;
@@ -325,7 +326,7 @@ app.post('/api/channelconfig', function (req, res) {
 });
 
 app.post('/api/txproposalrate', function (req, res) {
-    logger.info('================ /txproposalrate ======================');
+    logger.debug('================ /txproposalrate ======================');
 
     if (validateChannelIdParameter(req) && validateRequiredParameter(req, 'chaincode')) {
         var channelid = req.body.channelid;
@@ -338,6 +339,17 @@ app.post('/api/txproposalrate', function (req, res) {
         res.status(400).json({ error: 'You must supply a value for both the `channelid` and `chaincode` parameters' }).end();
     }
 });
+
+
+app.post('/api/poolinfo', function (req, res) {
+    logger.debug('================ /Pool Info ======================');
+    poolInfo.getPoolInfo()
+        .then(function (message) {
+            res.send(message);
+        });
+});
+
+
 
 // All remaining requests are invalid, as we aren't serving up static content here.
 app.get('*', function (request, response) {

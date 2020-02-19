@@ -24,7 +24,6 @@ logger.setLevel(config.loglevel);
 var client = null;
 var peer = null;
 var path = config.wallet_path;
-var org = config.org;
 var pool = [];
 var targets = [];
 
@@ -52,7 +51,6 @@ var connectChannel = function (channel_id) {
                 channel = client.newChannel(channel_id);
                 peer = client.newPeer(config.network_url);
                 
-
 
 
             } catch (error) {
@@ -133,9 +131,19 @@ var removeChannel = function (cid) {
     return;
 }
 
+var poolInfo = function() {
 
+    var info = [];
+    var channels = [];
+    for (var i = 0; i < pool.length; i++) {
+        channels.push({channelid:pool[i].channelid})
+    }
+
+    return {  pooledconnections: pool.length, items : channels };
+}
 
 
 exports.connectChannel = connectChannel;
 exports.getClient = getClient;
 exports.removeChannel = removeChannel;
+exports.poolInfo = poolInfo;
