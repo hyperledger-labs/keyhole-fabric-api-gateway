@@ -111,6 +111,11 @@ Returns Peers in the network.
 
 ![](images/peers.png)
 
+### Connection Pool Info
+For performance, the API Gateway maintains a connection pool. Current connections are returned with this API.
+
+![](images/poolinfo.png)
+
 ### Authenticate
 If authenticate is set to `true`, calling this API route will invoke the specified session Validator where form parameters can be processed and authentication logic performed. See the [Authentication](#Authentication) section below for more information.
 
