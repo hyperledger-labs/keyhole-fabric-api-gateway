@@ -1,7 +1,7 @@
 {
-  "name": "byzantine-gateway",
+  "name": "keyhole-fabric-api-gateway",
   "version": "0.0.1-SNAPSHOT",
-  "description": "Gateway access to the HLF channel for the Byzantine Flu data",
+  "description": "Gateway access to the HLF peer node channels ",
   "main": "index.js",
   "scripts": {
     "setupKeystore": "rm -rf ~/.hfc-key-store && cp -r app/hfc-key-store ~/.hfc-key-store",
@@ -15,10 +15,10 @@
     "http",
     "websocket",
     "gateway",
-    "React",
+    "node.js",
     "SPA"
   ],
-  "author": "Adi Rosenblum",
+  "author": "Keyhole Software",
   "license": "ISC",
   "engines": {
     "node": "8.15.0",

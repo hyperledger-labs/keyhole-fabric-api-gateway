@@ -10,6 +10,7 @@ API gateway implementation providing access to Hyperledger Fabric (HLF) blockcha
 - [Installation](#Installation)
 - [Configuration](#Configuration)
 - [API](#API)
+- [TESTS](#TESTS)
 - [Authentication](#Authentication)
 - [Websockets](#Websockets)
 ----
@@ -115,6 +116,15 @@ Returns Peers in the network.
 For performance, the API Gateway maintains a connection pool. Current connections are returned with this API.
 
 ![](images/poolinfo.png)
+
+# Tests
+Integration test scripts are defined in the `test` folder. These node.js scripts can be executed against a running API Gateway Instance.  Here are instructions on how to run and install 
+
+    $ cd test 
+    $ npm install 
+    $ node apitests.js https://localhost:9090 mychannel
+
+Substitute your own API host and channel name Results will be output to your console.
 
 ### Authenticate
 If authenticate is set to `true`, calling this API route will invoke the specified session Validator where form parameters can be processed and authentication logic performed. See the [Authentication](#Authentication) section below for more information.

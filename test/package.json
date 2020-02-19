@@ -1,0 +1,9 @@
+{
+  "name": "api-gateway-tests",
+  "version": "0.0.1-SNAPSHOT",
+  "description": "Gateway Integration Tests",
+  "main": "apitests.js",
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}
