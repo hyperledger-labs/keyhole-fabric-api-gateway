@@ -72,8 +72,10 @@ var query = function (channel,chaincode,query) {
             console.error("error from query = ", query_responses[0]);
         }
         logger.debug("Response is ", query_responses[0].toString());
+        util.done(channel_id);
         return query_responses[0].toString();
     }).catch((err) => {
+        util.removeChannel(channel_id);
         console.error("Caught Error", err);
     });
 };

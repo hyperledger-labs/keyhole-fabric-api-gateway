@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-var util = require('util');
+
 var config = require('../config.js');
 var log4js = require('log4js');
 var logger = log4js.getLogger('endpoint/block.js');
@@ -32,9 +32,11 @@ var getBlock = function (channel_id, blockNumber) {
         return c.queryBlock(blockNumber);
     }).then((query_responses) => {
         logger.debug("returned from query" + JSON.stringify(query_responses));
+        util.done(channel_id);
         return JSON.stringify(query_responses);
     }).catch((err) => {
         logger.error("Caught Error", err);
+        util.removeChannel(channel_id);
         return "Error " + err;
     });
 };

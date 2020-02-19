@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-var util = require('util');
+
 var config = require('../config.js');
 var log4js = require('log4js');
 var logger = log4js.getLogger('endpoint/channelconfig.js');
@@ -41,9 +41,11 @@ var getConfig = function (channel_id, block_number) {
         result.batchTimeout = bt.substring(2);
         result.consensusType = ct.substring(2);
 
+        util.done(channel_id);
         return JSON.stringify(result);
     }).catch((err) => {
         logger.error("Caught Error", err);
+        util.removeChannel(channel_id);
         return "Error " + err;
     });
 };

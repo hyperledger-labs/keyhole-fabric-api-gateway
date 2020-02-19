@@ -15,7 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-var util = require('util');
 var config = require('../config.js');
 var util = require('./util.js');
 var log4js = require('log4js');
@@ -40,8 +39,10 @@ var getChannelInfo = function (channel_id) {
             logger.error("error from query = ", query_responses[0]);
         }
         logger.debug("Response is ", query_responses[0].toString());
+        util.done(channel_id);
         return query_responses[0].toString();
     }).catch((err) => {
+        util.removeChannel(channel_id);
         logger.error("Caught Error", err);
     });
 };

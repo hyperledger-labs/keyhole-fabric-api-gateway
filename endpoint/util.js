@@ -88,7 +88,8 @@ var connectChannel = function (channel_id) {
 
 var get = function (cid) {
     for (var i = 0; i < pool.length; i++) {
-        if (pool[i].channelid === cid) { 
+        if (pool[i].channelid === cid && !pool[i].inuse) { 
+            pool[i].inuse = true;
             return pool[i].channel; 
         }
     }
@@ -97,25 +98,34 @@ var get = function (cid) {
 }
 
 var add = function (id, c) {
-    let add = true;
+   /* let add = true;
     for (var i = 0; i < pool.length; i++) {
         if (pool[i].channelid == id) {
             add = false;
             break;
         }
-    }
-
+    }*/
     if (add) {
         logger.debug("*** Channel pool not found, adding: " + id);
-        pool.push({ channelid: id, channel: c });
+        pool.push({ channelid: id, channel: c, datetime: new Date(), inuse: true  });
     } else {
         logger.debug("**** Found channel: " + id);
     }
 }
 
-
 var getClient = function () {
     return client;
+}
+
+// Mark pooled connection as NOT in use
+var done = function(cid) {
+    
+    for (var i = 0; i < pool.length; i++) {
+        if (pool[i].channelid === cid) { 
+            pool[i].inuse = false;
+          }
+    }
+    
 }
 
 var removeChannel = function (cid) {
@@ -136,10 +146,15 @@ var poolInfo = function() {
     var info = [];
     var channels = [];
     for (var i = 0; i < pool.length; i++) {
-        channels.push({channelid:pool[i].channelid})
+        channels.push({channelid:pool[i].channelid,  datetime: pool[i].datetime, inuse: pool[i].inuse })
     }
 
     return {  pooledconnections: pool.length, items : channels };
+}
+
+// Current connected peer, will be null if not connected
+var getPeer = function() {
+    return peer;
 }
 
 
@@ -147,3 +162,5 @@ exports.connectChannel = connectChannel;
 exports.getClient = getClient;
 exports.removeChannel = removeChannel;
 exports.poolInfo = poolInfo;
+exports.done = done;
+exports.getPeer = getPeer;

@@ -35,7 +35,7 @@ var getBlockInfo = function (channel_id) {
         }
 
         logger.debug("returned from query" + result);
-
+        util.done(channel_id);
         return result;
     }).catch((err) => {
         logger.error("Caught Error", err);

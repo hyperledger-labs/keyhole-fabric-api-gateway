@@ -27,8 +27,10 @@ var getPeers = function (channel_id) {
     }).then((channel) => {
         return channel.getPeers();
     }).then((query_responses) => {
+        util.done(channel_id);
         return query_responses[0].toString();
     }).catch((err) => {
+        util.removeChannel(channel_id);
         logger.error("Caught Error", err);
     });
 };

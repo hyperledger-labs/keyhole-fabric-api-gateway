@@ -15,39 +15,34 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-var util = require('util');
-var hfc = require('fabric-client');
+var futil = require('util');
 var config = require('../config.js');
 var log4js = require('log4js');
 var logger = log4js.getLogger('endpoint/createLab.js');
-var hlfutil = require('./util');
+var util = require('./util');
 
 var channel = {};
-var client = null;
-var path = config.wallet_path;
-var targets = [];
 var tx_id = null;
-var peerObj = null;
-var targets = null;
+
 
 logger.setLevel(config.loglevel);
 
-var execute = function (channel_id,chaincode,fnc,args) {
+var execute = function (channel_id, chaincode, fnc, args) {
     return Promise.resolve().then(() => {
-        return hlfutil.connectChannel(channel_id);
+        return util.connectChannel(channel_id);
     }).then((c) => {
-        console.log("Make query");
+        logger.debug("Make query");
         channel = c;
-        tx_id = hlfutil.getClient().newTransactionID();
-        console.log("Assigning transaction_id: ", tx_id._transaction_id);
+        tx_id = util.getClient().newTransactionID();
+        logger.debug("Assigning transaction_id: " + tx_id._transaction_id);
 
         // queryCar - requires 1 argument, ex: args: ['CAR4'],
         // queryAllCars - requires no arguments , ex: args: [''],
         console.log("labs" + JSON.stringify(args));
 
-        console.log( "chaincode "+chaincode + " - "+fnc+" - "+args.length);
+        logger.debug("chaincode " + chaincode + " - " + fnc + " - " + args.length);
         const request = {
-            targets: hlfutil.targets,
+            targets: util.targets,
             chaincodeId: chaincode,
             txId: tx_id,
             fcn: fnc,
@@ -63,12 +58,12 @@ var execute = function (channel_id,chaincode,fnc,args) {
         if (proposalResponses && proposalResponses[0].response &&
             proposalResponses[0].response.status === 200) {
             isProposalGood = true;
-            console.log('transaction proposal was good');
+            logger.debug('transaction proposal was good');
         } else {
-            console.error('transaction proposal was bad');
+            logger.error('transaction proposal was bad');
         }
         if (isProposalGood) {
-            console.log(util.format(
+            logger.debug(futil.format(
                 'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s", metadata - "%s", endorsement signature: %s',
                 proposalResponses[0].response.status, proposalResponses[0].response.message,
                 proposalResponses[0].response.payload, proposalResponses[0].endorsement.signature));
@@ -82,7 +77,8 @@ var execute = function (channel_id,chaincode,fnc,args) {
             // fail the test
             var transactionID = tx_id.getTransactionID();
             var eventPromises = [];
-            let eh = channel.newChannelEventHub(peerObj);
+
+            let eh = channel.newChannelEventHub(util.getPeer());
             eh.connect();
 
             let txPromise = new Promise((resolve, reject) => {
@@ -97,11 +93,11 @@ var execute = function (channel_id,chaincode,fnc,args) {
                     eh.disconnect();
 
                     if (code !== 'VALID') {
-                        console.error(
+                        logger.error(
                             'The transaction was invalid, code = ' + code);
                         reject();
                     } else {
-                        console.log(
+                        logger.info(
                             'The transaction has been committed on peer ' +
                             eh.getPeerAddr());
                         resolve();
@@ -111,16 +107,16 @@ var execute = function (channel_id,chaincode,fnc,args) {
             eventPromises.push(txPromise);
             var sendPromise = channel.sendTransaction(request);
             return Promise.all([sendPromise].concat(eventPromises)).then((results) => {
-                console.log(' event promise all complete and testing complete');
+                logger.debug(' event promise all complete and testing complete');
                 return results[0]; // the first returned value is from the 'sendPromise' which is from the 'sendTransaction()' call
             }).catch((err) => {
-                console.error(
+                logger.error(
                     'Failed to send transaction and get notifications within the timeout period.'
                 );
                 return 'Failed to send transaction and get notifications within the timeout period.';
             });
         } else {
-            console.error(
+            logger.error(
                 'Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...'
             );
             return 'Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...';
@@ -133,14 +129,17 @@ var execute = function (channel_id,chaincode,fnc,args) {
     }).then((response) => {
         if (response.status === 'SUCCESS') {
             console.log('Successfully sent transaction to the orderer.');
-            return "Transaction has been Ordered: "+chaincode+"("+fnc+") tx:"+tx_id.getTransactionID();
+            util.done(channel_id);
+            return "Transaction has been Ordered: " + chaincode + "(" + fnc + ") tx:" + tx_id.getTransactionID();
         } else {
             console.error('Failed to order the transaction. Error code: ' + response.status);
+            util.done(channel_id);
             return 'Failed to order the transaction. Error code: ' + response.status;
         }
     }, (err) => {
         console.error('Failed to send transaction due to error: ' + err.stack ? err
             .stack : err);
+        util.removeChannel(channel_id);
         return 'Failed to send transaction due to error: ' + err.stack ? err.stack :
             err;
     });

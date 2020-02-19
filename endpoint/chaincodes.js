@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-var util = require('util');
+
 var config = require('../config.js');
 var log4js = require('log4js');
 var logger = log4js.getLogger('endpoint/chaincodes.js');
@@ -30,8 +30,10 @@ var getChaincodes = function (channel_id) {
         return c.queryInstantiatedChaincodes(this.target, true);
     }).then((query_responses) => {
         logger.debug("returned from query" + JSON.stringify(query_responses));
+        util.done(channel_id);
         return JSON.stringify(query_responses);
     }).catch((err) => {
+        util.removeChannel(channel_id);
         logger.error("ERROR - Caught Error", err);
     });
 };

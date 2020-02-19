@@ -48,13 +48,14 @@ var getTransactionProposalRate = function (channel_id, chaincode) {
             args: []
 
         };
-
+        util.done(channel_id);
         return c.sendTransactionProposal(request);
 
     }).then((query_responses) => {
         logger.debug("returned from query" + JSON.stringify(query_responses));
         return JSON.stringify(query_responses);
     }).catch((err) => {
+        util.removeChannel(channel_id);
         logger.error("Caught Error", err);
     });
 };
