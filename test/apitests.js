@@ -39,7 +39,7 @@ axios
   })
   .then(res => {
     console.log(`----- api/peers results -----`)
-    console.log(`statusCode: ${res.statusCode}`)
+    console.log(`statusCode: ${res.status}`)
     console.log("Peers: "+res.data)
   })
   .catch(error => {
@@ -56,7 +56,7 @@ axios
 })
 .then(res => {
   console.log(`----- api/poolinfo results -----`)
-  console.log(`statusCode: ${res.statusCode}`)
+  console.log(`statusCode: ${res.status}`)
   console.log(res.data)
 })
 .catch(error => {
@@ -75,7 +75,7 @@ axios
 })
 .then(res => {
 
-  console.log(`statusCode: ${res.statusCode}`)
+  console.log(`statusCode: ${res.status}`)
   console.log(`----- api/blockinfo results -----`)
   console.log(res.data)
 })
@@ -95,7 +95,7 @@ axios
 })
 .then(res => {
 
-  console.log(`statusCode: ${res.statusCode}`)
+  console.log(`statusCode: ${res.status}`)
   console.log(`----- api/channelinfo results -----`)
   console.log(res.data)
 })
@@ -115,7 +115,7 @@ axios
 })
 .then(res => {
 
-  console.log(`statusCode: ${res.statusCode}`)
+  console.log(`statusCode: ${res.status}`)
   console.log(`----- api/chaincodes results -----`)
   console.log(res.data)
 })
