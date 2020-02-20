@@ -1,4 +1,4 @@
-# byzantine-api-gateway
+# keyhole-fabric-api-gateway
 
 API gateway implementation providing access to Hyperledger Fabric (HLF) blockchain networks. Useful for executing chaincode (Smart Contracts) and querying the blockchain by client applications.
 
