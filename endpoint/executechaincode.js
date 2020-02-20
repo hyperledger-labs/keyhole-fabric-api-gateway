@@ -36,8 +36,6 @@ var execute = function (channel_id, chaincode, fnc, args) {
         tx_id = util.getClient().newTransactionID();
         logger.debug("Assigning transaction_id: " + tx_id._transaction_id);
 
-        // queryCar - requires 1 argument, ex: args: ['CAR4'],
-        // queryAllCars - requires no arguments , ex: args: [''],
         console.log("labs" + JSON.stringify(args));
 
         logger.debug("chaincode " + chaincode + " - " + fnc + " - " + args.length);
@@ -130,11 +128,13 @@ var execute = function (channel_id, chaincode, fnc, args) {
         if (response.status === 'SUCCESS') {
             console.log('Successfully sent transaction to the orderer.');
             util.done(channel_id);
-            return "Transaction has been Ordered: " + chaincode + "(" + fnc + ") tx:" + tx_id.getTransactionID();
+            logger.debug( "Transaction has been Ordered: " + chaincode + "(" + fnc + ") tx:" + tx_id.getTransactionID());
+            return response.data ;
         } else {
             console.error('Failed to order the transaction. Error code: ' + response.status);
             util.done(channel_id);
-            return 'Failed to order the transaction. Error code: ' + response.status;
+            logger.debug(  'Failed to order the transaction. Error code: ' + response.status);
+            return null;
         }
     }, (err) => {
         console.error('Failed to send transaction due to error: ' + err.stack ? err

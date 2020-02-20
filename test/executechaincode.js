@@ -1,4 +1,4 @@
-/* 
+/**  
 
   API Gateway integration tests, assumes the KEYHOLE-FABRIC-API-GATEWAY is up and 
   running on the specified HOST argument.  
@@ -32,7 +32,7 @@ axios
 .post(host+'/api/execute', {
   channelid: channelid,
   chaincodeid: 'fabcar',
-  fcn: 'createCar',
+  fnc: 'createCar',
   args: ['CAR10', 'Chevy', 'Volt', 'Red', 'Nick']
 })
 .then(res => {
@@ -43,33 +43,6 @@ axios
 .catch(error => {
   console.error(error)
 })
-
-
-/**
- * 
- *   api/execute - Execute FabCar Query
- * 
- */
-
-axios
-  .post(host+'/api/execute', {
-    channelid: channelid,
-    chaincodeid: 'fabcar',
-    fnc: 'queryAllCars',
-    args: []
-  })
-  .then(res => {
-    console.log(`----- api/execute results -----`)
-    console.log(`statusCode: ${res.status}`)
-    console.log("Peers: "+res.data)
-  })
-  .catch(error => {
-    console.error(error)
-  })
-
-
-  
-
 
 
 
