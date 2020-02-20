@@ -86,17 +86,18 @@ axios
 
 /**  
 *
-*    api/channelinfo
+*    api/channelconfig
 *
 */
 axios
-.post(host+'/api/channelinfo', {
-    channelid: channelid
+.post(host+'/api/channelconfig', {
+    channelid: channelid,
+    blocknumber: 1
 })
 .then(res => {
 
   console.log(`statusCode: ${res.status}`)
-  console.log(`----- api/channelinfo results -----`)
+  console.log(`----- api/channelconfig results -----`)
   console.log(res.data)
 })
 .catch(error => {
