@@ -22,20 +22,20 @@ var log4js = require('log4js');
 var logger = log4js.getLogger('endpoint/querchaincode.js');
 var util = require('./util.js');
 
-var query = function (chaincode,query) {
+var execute = function (channel_id,chaincode,query,args) {
    
     return Promise.resolve().then(() => {
         return util.connectChannel(channel_id);
     }).then((channel) => {
         logger.debug("Make query");
-        var transaction_id = client.newTransactionID();
+        var transaction_id = util.getClient().newTransactionID();
         logger.debug("Assigning transaction_id: ", transaction_id._transaction_id);
 
         const request = {
             chaincodeId: chaincode,
             txId: transaction_id,
             fcn: query,
-            args: ['']
+            args: args
         };
         return channel.queryByChaincode(request);
     }).then((query_responses) => {
@@ -58,4 +58,4 @@ var query = function (chaincode,query) {
 };
 
 
-exports.query = query;
+exports.execute = execute;

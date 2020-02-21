@@ -29,9 +29,8 @@ var chaincodes = require('./endpoint/chaincodes.js');
 var txproposalrate = require('./endpoint/transactionproposalrate.js');
 var chaincode = require('./endpoint/executechaincode.js');
 var poolInfo = require('./endpoint/poolinfo.js');
-var querychaincode = require('./endpoint/querychaincode.js');
+var query = require('./endpoint/querychaincode.js');
 var session = require('express-session');
-var cookieParser = require('cookie-parser');
 var host = appconfig.host;
 var port = appconfig.port;
 var loglevel = appconfig.loglevel;
@@ -152,8 +151,6 @@ app.post('/authenticate/', function (req, res) {
 
 });
 
-
-
 app.post('/api/execute', function (req, res) {
     logger.debug('================ /execute chaincode ======================');
 
@@ -211,6 +208,66 @@ app.post('/api/execute', function (req, res) {
     }
 
 });
+
+
+
+app.post('/api/query', function (req, res) {
+    logger.debug('================ /execute query chaincode ======================');
+
+    var error = null;
+    var chaincodeid = null;
+    var channel = null;
+    var fnc = null;
+
+    if (!req.body.fnc) {
+        error = "Error, Function required";
+    } else {
+        fnc = req.body.fnc;
+    }
+
+
+    if (!req.body.channelid) {
+        error = "Error, channelid required";
+    } else {
+        channel = req.body.channelid;
+    }
+
+
+    if (!req.body.chaincodeid) {
+        error = "Error, Chaincodeid required";
+    } else {
+        chaincodeid = req.body.chaincodeid;
+    }
+
+
+    var args = req.body.args;
+    var obj;
+
+
+    try {
+        //obj = JSON.parse(args);
+        obj = args;
+    } catch (e) {
+        error = "Error, Parsing Args, check format";
+        logger.error(e);
+    }
+
+    if (error != null) {
+        logger.error(error);
+        res.status(500);
+        res.send(error);
+
+    } else {
+
+        query.execute(channel, chaincodeid, fnc, obj)
+            .then(function (message) {
+                res.send(message);
+            });
+
+    }
+
+});
+
 
 
 

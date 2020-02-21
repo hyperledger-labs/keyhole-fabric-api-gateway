@@ -29,7 +29,7 @@ const channelid = "mychannel";
  */
 
 axios
-  .post(host+'/api/execute', {
+  .post(host+'/api/query', {
     channelid: channelid,
     chaincodeid: 'fabcar',
     fnc: 'queryAllCars',
@@ -38,7 +38,7 @@ axios
   .then(res => {
     console.log(`----- api/execute results -----`)
     console.log(`statusCode: ${res.status}`)
-    console.log("Peers: "+res.data)
+    console.log("Peers: "+JSON.stringify(res.data))
   })
   .catch(error => {
     console.error(error)

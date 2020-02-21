@@ -98,9 +98,15 @@ Current Hash and Number of Blocks.
 ![](images/blockinfo.png)
 
 ### Execute Chaincode
-Executes chaincode by specifying channel, chaincode name, function, and arguments.
+Executes chaincode functions by specifying channel, chaincode name, function, and arguments.
 
 ![](images/execute.png)
+
+### Query Chaincode
+Execute chaincode query operations by specifying channel, chaincode name, function, and arguments. 
+
+![](images/query.png)
+
 
 ### Installed Chaincodes
 Returns installed chaincodes for a channel.
