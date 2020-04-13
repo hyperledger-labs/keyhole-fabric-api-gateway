@@ -1,6 +1,6 @@
 'use strict';
 /** 
-Copyright 2018 Keyhole Labs LLC
+Copyright 2019 Keyhole Labs LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ limitations under the License.
 var futil = require('util');
 var config = require('../config.js');
 var log4js = require('log4js');
-var logger = log4js.getLogger('endpoint/createLab.js');
+var logger = log4js.getLogger('endpoint/executechaincode.js');
 var util = require('./util');
 
 var channel = {};
@@ -35,8 +35,6 @@ var execute = function (channel_id, chaincode, fnc, args) {
         channel = c;
         tx_id = util.getClient().newTransactionID();
         logger.debug("Assigning transaction_id: " + tx_id._transaction_id);
-
-        console.log("labs" + JSON.stringify(args));
 
         logger.debug("chaincode " + chaincode + " - " + fnc + " - " + args.length);
         const request = {
@@ -120,24 +118,24 @@ var execute = function (channel_id, chaincode, fnc, args) {
             return 'Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...';
         }
     }, (err) => {
-        console.error('Failed to send proposal due to error: ' + err.stack ? err.stack :
+        logger.error('Failed to send proposal due to error: ' + err.stack ? err.stack :
             err);
         return 'Failed to send proposal due to error: ' + err.stack ? err.stack :
             err;
     }).then((response) => {
         if (response.status === 'SUCCESS') {
-            console.log('Successfully sent transaction to the orderer.');
+            logger.log('Successfully sent transaction to the orderer.');
             util.done(channel_id);
             logger.debug( "Transaction has been Ordered: " + chaincode + "(" + fnc + ") tx:" + tx_id.getTransactionID());
             return response.data ;
         } else {
-            console.error('Failed to order the transaction. Error code: ' + response.status);
+            logger.error('Failed to order the transaction. Error code: ' + response.status);
             util.done(channel_id);
             logger.debug(  'Failed to order the transaction. Error code: ' + response.status);
             return null;
         }
     }, (err) => {
-        console.error('Failed to send transaction due to error: ' + err.stack ? err
+        logger.error('Failed to send transaction due to error: ' + err.stack ? err
             .stack : err);
         util.removeChannel(channel_id);
         return 'Failed to send transaction due to error: ' + err.stack ? err.stack :
